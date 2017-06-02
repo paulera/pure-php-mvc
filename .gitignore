@@ -1,0 +1,14 @@
+###########
+#   MVC   #
+###########
+
+/var
+/application/config.php
+
+###############
+#   ECLIPSE   #
+###############
+
+.buildpath
+.project
+.settings/
