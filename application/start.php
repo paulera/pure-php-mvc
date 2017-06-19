@@ -4,9 +4,14 @@
 
 include_once DIR_LIB . DS . "autoloader.php";
 
-// including the router will make the request to be processed by
+// ----------------------------------------------------------------------
+// including the routers will make the request to be processed by
 // the right controller:
-require_once DIR_LIB . DS . "router.php";
+
+if (file_exists(DIR_APP . DS . "routes.php")) {
+    include_once DIR_APP . DS . "routes.php";
+}
+require_once DIR_LIB . DS . "autorouter.php";
 
 //bullshit ?
 // /**
