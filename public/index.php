@@ -54,13 +54,17 @@ $__file__ = __FILE__; // just for compatibility, to be able to inspect this
                       // value using XDebug PHP extension
 
 $DIR_PUBLIC = dirname($__file__); // folder where this INDEX.PHP file is
-$DIR_APP = realpath($DIR_PUBLIC . DS . '..' . DS . 'application');
+$DIR_ROOT = realpath($DIR_PUBLIC . DS . '..' . DS);
+$DIR_CORE = realpath($DIR_ROOT . DS . 'core');
+$DIR_APP = realpath($DIR_ROOT . DS . 'application');
 $DIR_MODEL = realpath($DIR_APP . DS . 'model');
 $DIR_VIEW = realpath($DIR_APP . DS . 'view');
 $DIR_CONTROLLER = realpath($DIR_APP . DS . 'controller');
 $DIR_LIB = realpath($DIR_APP . DS . 'lib');
 
 // make sure all paths were successfully resolved
+if (! $DIR_CORE)
+    throw new Exception("Can't find the CORE folder");
 if (! $DIR_APP)
     throw new Exception("Can't find the APPLICATION folder");
 if (! $DIR_MODEL)
@@ -93,6 +97,7 @@ if (! is_writable($DIR_LOG))
     throw new Exception('LOG folder is not writable.');
 
 define('DIR_PUBLIC', $DIR_PUBLIC);
+define('DIR_CORE', $DIR_CORE);
 define('DIR_APP', $DIR_APP);
 define('DIR_MODEL', $DIR_MODEL);
 define('DIR_CONTROLLER', $DIR_CONTROLLER);
@@ -110,7 +115,7 @@ define('DIR_LOG', $DIR_LIB);
 // The WAF also performs throttling, so if a specific IP is abusing the server
 // it will be blocked for a while.
 try {
-    require_once (DIR_LIB . DS . 'waf.php');
+    require_once (DIR_CORE . DS . 'waf.php');
 } catch (\Exception $e) {
     $file = $e->getFile();
     $lineNumber = $e->getLine();
@@ -129,7 +134,7 @@ try {
  * Starts the application
  */
 require_once DIR_APP . DS . 'config.php';
-require_once DIR_APP . DS . 'start.php';
+require_once DIR_CORE . DS . 'start.php';
 
 /* **************************************************************************
  * This is a Pure PHP MVC study by Paulo Amaral.

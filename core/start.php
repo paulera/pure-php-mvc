@@ -1,8 +1,8 @@
 <?php
 
-// include_once DIR_LIB.DS.'core_includes.php';
+// i n clude_once DIR_LIB.DS.'core_includes.php';
 
-include_once DIR_LIB . DS . "autoloader.php";
+include_once DIR_CORE . DS . "autoloader.php";
 
 // ----------------------------------------------------------------------
 // including the routers will make the request to be processed by
@@ -11,7 +11,7 @@ include_once DIR_LIB . DS . "autoloader.php";
 if (file_exists(DIR_APP . DS . "routes.php")) {
     include_once DIR_APP . DS . "routes.php";
 }
-require_once DIR_LIB . DS . "autorouter.php";
+require_once DIR_CORE . DS . "autorouter.php";
 
 //bullshit ?
 // /**
