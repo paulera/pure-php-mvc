@@ -16,9 +16,18 @@
  *   The default controller, if can't specify one, is HomeController
  *   The default function, if can't specify one, is index()
  * 
+ *   Case 0:
+ *   example.com/index.php
+ *      Controller = HomeController
+ *      function = index()
+ * 
+ *   Case 1:
  *   example.com/index.php/abc
  *      Controller = HomeController
  *      function = abc()
+ *      --- If can't find, will try this:
+ *          Controller = AbcController
+ *          function = index()
  *      
  *   example.com/index.php/abc/def
  *      Controller = AbcController
@@ -47,4 +56,35 @@
  *          function = index()
  */
 
+$vars = array();
+parse_str($_SERVER['QUERY_STRING'], $vars);
 
+
+if (isset($_SERVER["PATH_INFO"])) {
+    $path = trim($_SERVER["PATH_INFO"], '/');
+    $pathParts = explode('/', $path);
+} else {
+    $pathParts = array();
+}
+
+switch (count($pathParts)) {
+    case 0:
+        // calling HomeController, function index
+        $controller = new HomeController();
+        $controller->index($vars);
+        break;
+    
+    case 1:
+        // Using the path part as function name, in HomeController
+        $controller = new HomeController();
+        $part0 = $pathParts[0];
+        if (method_exists($controller, $part0)) {
+            $controller->$part0($vars);
+        } else {
+            // try $part0 as controller name and look for an index function
+            $controllerName = str_replace(';','',ucwords($part0.';controller',';'));
+            $controller = new $controllerName();
+            $controllerName->index();
+        }
+        
+}

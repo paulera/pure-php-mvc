@@ -110,7 +110,7 @@ define('DIR_LOG', $DIR_LIB);
 // The WAF also performs throttling, so if a specific IP is abusing the server
 // it will be blocked for a while.
 try {
-    require_once (DIR_APP . DS . 'waf.php');
+    require_once (DIR_LIB . DS . 'waf.php');
 } catch (\Exception $e) {
     $file = $e->getFile();
     $lineNumber = $e->getLine();
