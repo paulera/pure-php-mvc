@@ -92,11 +92,9 @@ foreach ([$partsCount - 2, $partsCount - 1] as $i) {
     }
     
     // Resolves the include path for the controller
-    if ($i > 0) {            
-        $pathArray = array_slice($pathParts, 0, $i);
-        $path = implode(DS, $pathArray);
-        $controllerPath = DIR_CONTROLLER.DS.$path;
-    }
+    $pathArray = array_slice($pathParts, 0, min([$i, 0]));
+    $path = implode(DS, $pathArray);
+    $controllerPath = DIR_CONTROLLER.DS.$path;
     
     $controllerFullPath = $controllerPath.DS.$controllerClassName.".php";
     
