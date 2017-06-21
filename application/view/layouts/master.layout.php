@@ -1,7 +1,7 @@
 <html>
 
 	<head>
-		<title>My MVC Test</title>
+		<title><?php echo $title; ?></title>
 	</head>
 	
 	<body>

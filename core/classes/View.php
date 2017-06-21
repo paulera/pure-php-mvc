@@ -15,9 +15,10 @@ class View {
     
     public static function renderWithLayout($layoutRelativePath, $viewRelativePath, $variables = null) {
         $view = self::render($viewRelativePath, $variables);
-        $page = self::render($layoutRelativePath, array(
+        $layoutVariables = array_merge ($variables, array(
             "contents" => $view
         ));
+        $page = self::render($layoutRelativePath, $layoutVariables);
         return $page;
     }
 
