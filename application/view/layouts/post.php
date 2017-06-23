@@ -1,7 +1,7 @@
 <?php
 
 if (isset($postData->title)) {
-    echo '<p class="h1 title"><a href="'.$postData->permalink.'">'.$postData->title.'</a></p>'."\n";    
+    echo '<h1 class="title"><a href="'.$postData->permalink.'">'.$postData->title.'</a></h1>'."\n";    
 }
 
 if (isset($postData->date)) { 
