@@ -45,10 +45,10 @@ if (isset($title)) {
 	crossorigin="anonymous">
 
 <!-- Prism -->
-<link href="css/prism.css?20170622" rel="stylesheet" />
+<link href="/css/prism.css?20170622" rel="stylesheet" />
 
 <!-- Main -->
-<link href="css/main.css?20170622" rel="stylesheet" />
+<link href="/css/main.css?20170622" rel="stylesheet" />
 
 </head>
 
@@ -64,6 +64,7 @@ body {
 
 	<div id="header">
 		<?php View::render("header.php"); ?>
+		<h2>header is here</h2><hr>
 	</div>
 
 	<div id="torso">
@@ -89,10 +90,10 @@ body {
 		crossorigin="anonymous"></script>
 		
 	<!--  Prism -->
-	<script src="js/prism.js?20170622"></script>
+	<script src="/js/prism.js?20170622"></script>
 	
 	<!--  Main -->
-	<script src="js/main.js?20170622"></script>
+	<script src="/js/main.js?20170622"></script>
 
 
 

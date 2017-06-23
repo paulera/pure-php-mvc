@@ -57,19 +57,12 @@
  *          Subfolder = abc/def/ghi
  *          Controller = JklController
  *          function = index()
+ *   
  */
 
-$vars = array();
-parse_str($_SERVER['QUERY_STRING'], $vars);
+$parts = Input::explodePath();
 
-if (isset($_SERVER["PATH_INFO"])) {
-    $path = trim($_SERVER["PATH_INFO"], '/');
-    $pathParts = explode('/', $path);
-} else {
-    $pathParts = array();
-}
-
-$partsCount = count($pathParts);
+$partsCount = count($parts);
 foreach ([$partsCount - 2, $partsCount - 1] as $i) {
     
     // when reading URLs at root level ($partsCount == 0), ignore
@@ -82,27 +75,30 @@ foreach ([$partsCount - 2, $partsCount - 1] as $i) {
     
     // Resolves the controller name
     if ($i >= 0) {
-        $controllerPrefix = $pathParts[$i];
+        $controllerPrefix = $parts[$i];
     }
     $controllerClassName = str_replace(';','',ucwords($controllerPrefix.';controller',';'));
     
     // Resolves the method name
     if ( $i+1 < $partsCount) {
-        $methodName = $pathParts[$i+1];
+        $methodName = $parts[$i+1];
     }
     
     // Resolves the include path for the controller
-    $pathArray = array_slice($pathParts, 0, min([$i, 0]));
+    $pathArray = array_slice($parts, 0, min([$i, 0]));
     $path = implode(DS, $pathArray);
-    $controllerPath = DIR_CONTROLLER.DS.$path;
+    $controllerDir = DIR_CONTROLLER.DS.$path;
     
-    $controllerFullPath = $controllerPath.DS.$controllerClassName.".php";
+    $controllerFullPath = $controllerDir.DS.$controllerClassName.".php";
     
-    if (is_dir($controllerPath)) {
+    if (is_dir($controllerDir)) {
         if (file_exists($controllerFullPath)) {
             include_once($controllerFullPath);
             if (class_exists($controllerClassName)) {
                 $controller = new $controllerClassName();
+                if (!method_exists($controller, $methodName)) {
+                    $controller = null;
+                }
             }
         }
     }
