@@ -1,5 +1,8 @@
 <?php
 
+include_once DIR_LIB . DS . 'blog' . DS . 'BlogPost.php';
+include_once DIR_LIB . DS . 'blog' . DS . 'BlogPostFactory.php';
+
 class BlogController
 {
 
@@ -191,88 +194,5 @@ class BlogController
         return View::render("blog/postlist.php", array(
             "posts" => $posts
         ));
-    }
-}
-
-class BlogPost
-{
-
-    public $year;
-
-    public $month;
-
-    public $day;
-
-    public $date;
-
-    public $postName;
-
-    public $title;
-
-    public $description;
-
-    public $permalink;
-
-    public $metadata;
-
-    public function loadMetadata($metadata)
-    {
-        // Try to load post metadata from JSON file
-        if (file_exists($jsonFile)) {
-            $this->metadata = json_decode(file_get_contents($jsonFile));
-            
-            if (isset($this->metadata->title)) {
-                $this->title = $this->metadata->title;
-            }
-            
-            if (isset($this->metadata->description)) {
-                $this->description = $this->metadata->description;
-            }
-            
-            if (isset($this->metadata->file)) {
-                $this->file = $this->metadata->file;
-            }
-            
-            return true;
-        }
-        return false;
-    }
-}
-
-class BlogPostFactory
-{
-
-    public static function getPostFromPath($path)
-    {
-        $post = null;
-        
-        $post = new BlogPost();
-        $post->permalink = DIR_ROOT . $path;
-        
-        $explodedPath = explode("/", $path);
-        $post->year = $explodedPath[2];
-        $post->month = $explodedPath[3];
-        $post->day = $explodedPath[4];
-        
-        if (! ctype_digit($post->year) || ! ctype_digit($post->month) || ! ctype_digit($post->day)) {
-            throw new Exception("What the flock is this post?");
-        }
-        
-        $post->date = new DateTime();
-        $post->date->setDate($post->year, $post->month, $post->day);
-        $post->date->setTime(0, 0, 0);
-        
-        if (file_exists(DIR_ROOT . $path . '.json')) {
-            $metadata = json_decode(file_get_contents(DIR_ROOT . $path . '.json'));
-            $post->loadMetadata($metadata);
-        }
-        
-        if (! isset($post->title)) {
-            $title = preg_replace("/(-|_|\ )/", " ", $explodedPath[5]);
-            $title = trim(ucfirst($title));
-            $post->title = $title;
-        }
-        
-        return $post;
     }
 }
