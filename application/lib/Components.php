@@ -8,25 +8,24 @@ class Components {
         echo '</code></pre>';
     }
     
-    public static function disqus($url, $uuid) {
+    public static function disqus($context) {
+        
+        $site_url = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off") ? "https://".$_SERVER['HTTP_HOST'] : "http://".$_SERVER['HTTP_HOST'];
+        $uri = explode("#", $_SERVER['REQUEST_URI']);
+        $uri = $uri[0];
+        $uri = explode("?", $uri);
+        $uri = $uri[0];
+        
         ?>
         
 <div id="disqus_thread"></div>
 <script>
 
-//--------------------
-//TODO: manage environments to turn this on only in development
-var disqus_developer = 1;
-//--------------------
-
-var disqus_config = function () {
-	this.page.url = '<?php echo "http://localhost:9091".$url; ?>';
-	this.page.identifier = '<?php echo $uuid; ?>';
-};
+var disqus_url = '<?php echo $site_url.$uri; ?>';
 
 (function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://EXAMPLE.disqus.com/embed.min.js';
+s.src = 'https://paulodevtest.disqus.com/embed.js';
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();

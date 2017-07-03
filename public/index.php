@@ -63,6 +63,8 @@ $DIR_CONTROLLER = realpath($DIR_APP . DS . 'controller');
 $DIR_LIB = realpath($DIR_APP . DS . 'lib');
 
 // make sure all paths were successfully resolved
+if (! $DIR_ROOT)
+    throw new Exception("Can't find the ROOT folder");
 if (! $DIR_CORE)
     throw new Exception("Can't find the CORE folder");
 if (! $DIR_APP)
@@ -97,6 +99,7 @@ if (! is_writable($DIR_LOG))
     throw new Exception('LOG folder is not writable.');
 
 define('DIR_PUBLIC', $DIR_PUBLIC);
+define('DIR_ROOT', $DIR_ROOT);
 define('DIR_CORE', $DIR_CORE);
 define('DIR_APP', $DIR_APP);
 define('DIR_MODEL', $DIR_MODEL);
@@ -133,8 +136,19 @@ try {
 /*
  * Starts the application
  */
-require_once DIR_APP . DS . 'config.php';
-require_once DIR_CORE . DS . 'start.php';
+try {
+    require_once DIR_APP . DS . 'config.php';
+    require_once DIR_CORE . DS . 'start.php';
+} catch (Exception $ex) {
+    
+    // if there is a custom error file, include it. 
+    if (View::exists("error.php")) {
+        echo View::render("error.php", array( "exception" => $ex ));
+    } else {
+        throw $ex;
+    }
+}
+die();
 
 /* **************************************************************************
  * This is a Pure PHP MVC study by Paulo Amaral.

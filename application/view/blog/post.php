@@ -16,4 +16,4 @@ if (isset($postData->author)) {
 <hr>
 <?php echo $contents; ?>
 <hr>
-<?php echo Components::disqus($postData->permalink, $postData->uuid)?>
+<?php echo Components::disqus($postData->permalink); ?>

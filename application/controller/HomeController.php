@@ -12,7 +12,7 @@ class HomeController
         );
         
         $html = View::renderWithLayout($layout, $view, $variables);
-        echo $html;
+        die($html);
     }
 
     public function abc()

@@ -3,15 +3,9 @@
 class BlogController
 {
 
-    protected $blogViewDir = "blog";
+    protected $layout = "layouts/master.php";
 
-    protected $supportedPostExtension = array(
-        "md.php",
-        "md",
-        "html",
-        "php",
-        "txt"
-    );
+    protected $model = null;
 
     // post files are allowed to have only alphanumeric chars and the ones
     // listed in $postWhiteListChars
@@ -72,67 +66,48 @@ class BlogController
             "contents" => $contents
         ));
         
-        echo $contents;
-        die();
-    }
-
-    private function listPosts()
-    {
-        return $this->listPostsByDate(null, null, null);
-    }
-
-    private function listPostsByDate($year = null, $month = null, $day = null)
-    {
-        // TODO: not implemented
+        die($contents);
     }
 
     private function showPost($year, $month, $day, $post)
     {
-        $postRelativePathNoExt = $this->blogViewDir . DS . $year . DS . $month . DS . $day . DS . $post;
-        $postFullPathNoExt = DIR_VIEW . DS . $postRelativePathNoExt;
+        $postDayPath = $this->blogPostsDirRelativeToRoot . $year . DS . $month . DS . $day . DS;
+        $postRelativePathNoExt = $postDayPath . $post;
+        
+        $postFullPathNoExt = realpath(DIR_ROOT . DS . 'blog' . DS . $postDayPath) . DS . $post;
         
         // Try to load post metadata from JSON file
         $postMetaData = null;
         if (file_exists($postFullPathNoExt . ".json")) {
-            $jsonFile = $postFullPathNoExt . ".json";
-            $postMetaData = json_decode(file_get_contents($jsonFile));
+            $postMetaData = json_decode(file_get_contents($postFullPathNoExt . ".json"));
         }
         
         $postFile = null;
-        $postType = null;
-        if ($postMetaData) {
-            // Will look for a file to get contents from
-            if (isset($postMetadata->file)) {
-                // File defined in the json file
-                if (file_exists($postMetadata->file)) {
-                    $fileExtension = strtolower(end(explode(".", $postMetadata->file)));
-                    if (! in_array($this->supportedPostExtension, $fileExtension)) {
-                        throw new Exception("Post format not supported");
-                    }
-                    $postFile = $postMetadata->file;
-                    $postType = trim(str_replace($postFullPathNoExt, '', $postFile), '.');
-                } else {
-                    throw new Exception("Post not found");
-                }
+        if (isset($postMetaData) && isset($postMetadata->file)) {
+            if (file_exists($postMetadata->file)) {
+                // $fileExtension = strtolower(end(explode(".", $postMetadata->file)));
+                // if (! in_array($this->supportedPostExtension, $fileExtension)) {
+                // throw new Exception("Post format not supported");
+                // }
+                $postFile = $postMetadata->file;
+            } else {
+                throw new Exception("File not found");
             }
         }
         
         if ($postFile == null) {
-            // No file defined, will try to guess using the filename
+            // No file defined in the json metadata, will try to guess using the filename
             // with supported extensions
-            $files = glob($postFullPathNoExt . '.{' . implode(',', $this->supportedPostExtension) . '}', GLOB_BRACE);
-            if (count($files) > 0) {
-                // found!
-                $postFile = $files[0];
-                $postType = trim(str_replace($postFullPathNoExt, '', $postFile), '.');
-            }
+            $blogModel = BlogModel::instance();
+            $postFile = $blogModel->getPostFile($postFullPathNoExt);
         }
         
-        // Can't find a suitable view by any means. 404.
         if ($postFile == null) {
-            echo "404";
+            View::error404();
             die();
         }
+        
+        $postType = trim(str_replace($postFullPathNoExt, '', $postFile), '.');
         
         // Handling the file that was found.
         $htmlContents = "";
@@ -148,7 +123,7 @@ class BlogController
                 break;
             
             case 'md.php':
-                $mdContents = View::render($postRelativePathNoExt . ".md.php");
+                $mdContents = View::render('blog' . DS . $postRelativePathNoExt . ".md.php");
                 $parsedown = new Parsedown();
                 $htmlContents = $parsedown->text($mdContents);
                 break;
@@ -166,25 +141,136 @@ class BlogController
         
         $date = new DateTime();
         $date->setDate($year, $month, $day);
+        
         $postMetaData->date = $date;
         
-        if (!isset($postMetaData->title)) {
-            $title = preg_replace( "/(-|_|\ )/", " ", $post);
+        if (! isset($postMetaData->title)) {
+            $title = preg_replace("/(-|_|\ )/", " ", $post);
             $title = trim(ucfirst($title));
             $postMetaData->title = $title;
         }
         
-        if (!isset($postMetaData->uuid)) {
+        if (! isset($postMetaData->uuid)) {
             $postMetaData->uuid = $postRelativePathNoExt;
         }
         
-        $postMetaData->permalink = "/".$postRelativePathNoExt;
+        $postMetaData->permalink = "/" . $postRelativePathNoExt;
         
-        $contentsWithBlogSubLayout = View::render("layouts/post.php", array(
+        $contentsWithBlogSubLayout = View::render("blog/post.php", array(
             "contents" => $htmlContents,
             "postData" => $postMetaData
         ));
         
         return $contentsWithBlogSubLayout;
+    }
+
+    private function listPosts()
+    {
+        return $this->listPostsByDate(null, null, null);
+    }
+
+    private function listPostsByDate($year = null, $month = null, $day = null)
+    {
+        $path = "";
+        if ($year > 0) {
+            $path .= $year . DS;
+        }
+        
+        if ($month > 0) {
+            $path .= $month . DS;
+        }
+        
+        if ($day > 0) {
+            $path .= $day . DS;
+        }
+        
+        $blogModel = BlogModel::instance();
+        $posts = $blogModel->getPostsByPath($path);
+        return View::render("blog/postlist.php", array(
+            "posts" => $posts
+        ));
+    }
+}
+
+class BlogPost
+{
+
+    public $year;
+
+    public $month;
+
+    public $day;
+
+    public $date;
+
+    public $postName;
+
+    public $title;
+
+    public $description;
+
+    public $permalink;
+
+    public $metadata;
+
+    public function loadMetadata($metadata)
+    {
+        // Try to load post metadata from JSON file
+        if (file_exists($jsonFile)) {
+            $this->metadata = json_decode(file_get_contents($jsonFile));
+            
+            if (isset($this->metadata->title)) {
+                $this->title = $this->metadata->title;
+            }
+            
+            if (isset($this->metadata->description)) {
+                $this->description = $this->metadata->description;
+            }
+            
+            if (isset($this->metadata->file)) {
+                $this->file = $this->metadata->file;
+            }
+            
+            return true;
+        }
+        return false;
+    }
+}
+
+class BlogPostFactory
+{
+
+    public static function getPostFromPath($path)
+    {
+        $post = null;
+        
+        $post = new BlogPost();
+        $post->permalink = DIR_ROOT . $path;
+        
+        $explodedPath = explode("/", $path);
+        $post->year = $explodedPath[2];
+        $post->month = $explodedPath[3];
+        $post->day = $explodedPath[4];
+        
+        if (! ctype_digit($post->year) || ! ctype_digit($post->month) || ! ctype_digit($post->day)) {
+            throw new Exception("What the flock is this post?");
+        }
+        
+        $post->date = new DateTime();
+        $post->date->setDate($post->year, $post->month, $post->day);
+        $post->date->setTime(0, 0, 0);
+        
+        if (file_exists(DIR_ROOT . $path . '.json')) {
+            $metadata = json_decode(file_get_contents(DIR_ROOT . $path . '.json'));
+            $post->loadMetadata($metadata);
+        }
+        
+        if (! isset($post->title)) {
+            $title = preg_replace("/(-|_|\ )/", " ", $explodedPath[5]);
+            $title = trim(ucfirst($title));
+            $post->title = $title;
+        }
+        
+        return $post;
     }
 }
