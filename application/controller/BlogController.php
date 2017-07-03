@@ -80,6 +80,8 @@ class BlogController
         $postMetaData = null;
         if (file_exists($postFullPathNoExt . ".json")) {
             $postMetaData = json_decode(file_get_contents($postFullPathNoExt . ".json"));
+        } else {
+            $postMetaData = new stdClass();     
         }
         
         $postFile = null;
