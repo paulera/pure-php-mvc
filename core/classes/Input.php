@@ -2,11 +2,13 @@
 
 class Input
 {
-    
-    public static function explodePath() {
-        
+
+    public static function explodePath()
+    {
         $vars = array();
-        parse_str($_SERVER['QUERY_STRING'], $vars);
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $vars);
+        }
         
         if (isset($_SERVER["PATH_INFO"])) {
             $path = trim($_SERVER["PATH_INFO"], '/');
@@ -17,4 +19,5 @@ class Input
         
         return $pathParts;
     }
+    
 }

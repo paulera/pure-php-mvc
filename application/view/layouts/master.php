@@ -3,6 +3,9 @@
 <head>
 
 <title><?php
+
+$cacheRef='20170622'; // change this to force css and js update in clients
+
 if (isset($title)) {
     echo $title . " - paulodev.com";
 } else {
@@ -15,7 +18,7 @@ if (isset($title)) {
 <!--  FONT AWESOME -->
 
 <link
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 	rel="stylesheet"
 	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
 	crossorigin="anonymous">
@@ -27,28 +30,28 @@ if (isset($title)) {
 -->
 
 <link
-	href="https://fonts.googleapis.com/css?family=Inconsolata|Open+Sans|Raleway"
+	href="//fonts.googleapis.com/css?family=Inconsolata|Open+Sans|Raleway"
 	rel="stylesheet">
 
 <!--  BOOTSTRAP -->
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
 
 <!-- Optional theme -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
 
 <!-- Prism -->
-<link href="/css/prism.css?20170622" rel="stylesheet" />
+<link href="<?php echo SITE; ?>css/prism.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
 
 <!-- Main -->
-<link href="/css/main.css?20170622" rel="stylesheet" />
+<link href="<?php echo SITE; ?>css/main.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
 
 </head>
 
@@ -90,10 +93,10 @@ body {
 		crossorigin="anonymous"></script>
 		
 	<!--  Prism -->
-	<script src="/js/prism.js?20170622"></script>
+	<script src="js/prism.js?<?php echo $cacheRef; ?>"></script>
 	
 	<!--  Main -->
-	<script src="/js/main.js?20170622"></script>
+	<script src="js/main.js?<?php echo $cacheRef; ?>"></script>
 
 
 

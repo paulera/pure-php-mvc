@@ -8,6 +8,14 @@ if [ ! -d "public" ]; then
     exit 1
 fi
 
-cd public
+cd public/..
 
-php -S 127.0.0.1:9091 -t .
+HOST="127.0.0.1"
+PORT="9091"
+
+if [[ "$OSTYPE" =~ "darwin" ]]; then
+    # OSX
+    sleep 2 && open "http://$HOST:$PORT" &>/dev/null &
+fi
+
+php -S $HOST:$PORT -t .

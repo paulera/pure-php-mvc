@@ -2,16 +2,11 @@
 
 class HomeController
 {
-
-    public function index()
+    public function indexAction()
     {
-        $layout = "layouts/master.php";
-        $view = "testview.php";
-        $variables = array(
+        $html = View::renderWithLayout("layouts/master.php", "testview.php", array(
             "title" => "vai nesse texto truta"
-        );
-        
-        $html = View::renderWithLayout($layout, $view, $variables);
+        ));
         die($html);
     }
 

@@ -19,7 +19,7 @@ class BlogController
         " "
     );
 
-    public function index()
+    public function indexAction()
     {
         $this->listPosts();
     }
