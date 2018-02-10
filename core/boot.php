@@ -144,8 +144,13 @@ try {
  * Starts the application
  */
 try {
+    
+    // Load environment configuration
     require_once DIR_APP . DS . 'config.php';
-    require_once DIR_CORE . DS . 'start.php';
+    
+    // Runs the application
+    require_once DIR_CORE . DS . 'run.php';
+    
 } catch (\Exception $ex) {
     
     View::error($ex->getCode(), array(

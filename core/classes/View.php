@@ -4,13 +4,6 @@ class View {
     
     public static function render($view, $variables = null) {
         
-        if (!View::exists($view)) {
-            View::error(500, array(
-                'message' => 'View not found: '.$view
-            ));
-            die();
-        }
-        
         $viewRelativePathClean = str_replace("../", "", $view);
         $filePath = DIR_VIEW.DS.$viewRelativePathClean;
         if (!file_exists($filePath)) {

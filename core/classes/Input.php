@@ -12,9 +12,15 @@ class Input
         
         if (isset($_SERVER["PATH_INFO"])) {
             $path = trim($_SERVER["PATH_INFO"], '/');
-            $pathParts = explode('/', $path);
         } else {
-            $pathParts = array();
+            $path = '';
+        }
+        
+        $pathParts = array();
+        foreach (explode('/', $path) as $part) {
+            if (!empty($part)) {
+                $pathParts[] = $part;
+            }
         }
         
         return $pathParts;

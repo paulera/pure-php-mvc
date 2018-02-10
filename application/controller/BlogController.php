@@ -24,7 +24,7 @@ class BlogController
         $this->listPosts();
     }
 
-    public function route()
+    public function handle()
     {
         $parts = Input::explodePath();
         $count = count($parts);

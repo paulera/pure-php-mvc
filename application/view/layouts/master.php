@@ -47,11 +47,11 @@ if (isset($title)) {
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
 
-<!-- Prism -->
-<link href="<?php echo SITE; ?>css/prism.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
+<!-- Prism (render source code) -->
+<link href="<?php echo Env::web(); ?>/css/prism.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
 
 <!-- Main -->
-<link href="<?php echo SITE; ?>css/main.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
+<link href="<?php echo Env::web(); ?>/css/main.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
 
 </head>
 
@@ -93,10 +93,10 @@ body {
 		crossorigin="anonymous"></script>
 		
 	<!--  Prism -->
-	<script src="js/prism.js?<?php echo $cacheRef; ?>"></script>
+	<script src="<?php echo Env::web(); ?>/js/prism.js?<?php echo $cacheRef; ?>"></script>
 	
 	<!--  Main -->
-	<script src="js/main.js?<?php echo $cacheRef; ?>"></script>
+	<script src="<?php echo Env::web(); ?>/js/main.js?<?php echo $cacheRef; ?>"></script>
 
 
 
