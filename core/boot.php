@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  * *************************************************************************
  * This file is the entry point for every request and it is where all
@@ -6,10 +6,11 @@
  * such as javascripts, css files, and media.
  */
 define('IS_APP', true); // flag to any further included file that the request
-                        // came through the happy path (index.php). All other
-                        // PHP files must have this as first line:
+                        // came through the main entry point. All other
+                        // PHP files must start with:
                         //
-                        // <?php if (!defined('IS_APP')) die ('Nope.');
+                        // <?php
+                        // defined('IS_APP') || ();
 
 /*
  * First some directories will be checked and constants will be created to give
@@ -109,7 +110,7 @@ define('DIR_VAR', $DIR_LIB);
 define('DIR_LOG', $DIR_LIB);
 
 $scriptName = $_SERVER['SCRIPT_NAME'];
-if (substr($scriptName, -1) != '/') {
+if (substr($scriptName, - 1) != '/') {
     $scriptName = $scriptName . '/';
 }
 define('SITE', $scriptName);
@@ -150,7 +151,6 @@ try {
     
     // Runs the application
     require_once DIR_CORE . DS . 'run.php';
-    
 } catch (\Exception $ex) {
     
     View::error($ex->getCode(), array(
@@ -158,9 +158,11 @@ try {
         "source" => $ex->getFile() . " (line " . $ex->getLine() . ")"
     ));
     
-    // if there is a custom error file, include it. 
+    // if there is a custom error file, include it.
     if (View::exists("error.php")) {
-        echo View::render("error.php", array( "exception" => $ex ));
+        echo View::render("error.php", array(
+            "exception" => $ex
+        ));
     } else {
         throw $ex;
     }

@@ -1,10 +1,12 @@
+<?php 
+defined('IS_APP') || die();
+?>
 <html>
 
 <head>
 
 <title><?php
-
-$cacheRef='20170622'; // change this to force css and js update in clients
+$cacheRef = '20170622'; // change this to force css and js update in clients
 
 if (isset($title)) {
     echo $title . " - paulodev.com";
@@ -48,10 +50,14 @@ if (isset($title)) {
 	crossorigin="anonymous">
 
 <!-- Prism (render source code) -->
-<link href="<?php echo Env::web(); ?>/css/prism.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
+<link
+	href="<?php echo Env::web(); ?>/css/prism.css?<?php echo $cacheRef; ?>"
+	rel="stylesheet" />
 
 <!-- Main -->
-<link href="<?php echo Env::web(); ?>/css/main.css?<?php echo $cacheRef; ?>" rel="stylesheet" />
+<link
+	href="<?php echo Env::web(); ?>/css/main.css?<?php echo $cacheRef; ?>"
+	rel="stylesheet" />
 
 </head>
 
@@ -67,7 +73,8 @@ body {
 
 	<div id="header">
 		<?php View::render("header.php"); ?>
-		<h2>header is here</h2><hr>
+		<h2>header is here</h2>
+		<hr>
 	</div>
 
 	<div id="torso">
@@ -91,14 +98,14 @@ body {
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 		crossorigin="anonymous"></script>
-		
+
 	<!--  Prism -->
-	<script src="<?php echo Env::web(); ?>/js/prism.js?<?php echo $cacheRef; ?>"></script>
-	
+	<script
+		src="<?php echo Env::web(); ?>/js/prism.js?<?php echo $cacheRef; ?>"></script>
+
 	<!--  Main -->
-	<script src="<?php echo Env::web(); ?>/js/main.js?<?php echo $cacheRef; ?>"></script>
-
-
+	<script
+		src="<?php echo Env::web(); ?>/js/main.js?<?php echo $cacheRef; ?>"></script>
 
 </body>
 

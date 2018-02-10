@@ -1,4 +1,5 @@
 <?php
+defined('IS_APP') || die();
 
 include_once DIR_LIB . DS . 'blog' . DS . 'BlogPost.php';
 include_once DIR_LIB . DS . 'blog' . DS . 'BlogPostFactory.php';
@@ -84,7 +85,7 @@ class BlogController
         if (file_exists($postFullPathNoExt . ".json")) {
             $postMetaData = json_decode(file_get_contents($postFullPathNoExt . ".json"));
         } else {
-            $postMetaData = new stdClass();     
+            $postMetaData = new stdClass();
         }
         
         $postFile = null;

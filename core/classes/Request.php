@@ -1,7 +1,12 @@
 <?php
+defined('IS_APP') || die();
 
 class Request
 {
+    
+    // Keep from creating new instances of this class
+    private function __construct()
+    {}
 
     public static function referer()
     {
@@ -33,10 +38,11 @@ class Request
 
     public static function path()
     {
+        // TODO: staticalize path
         if (isset($_SERVER["PATH_INFO"])) {
-            return trim($_SERVER["PATH_INFO"], '/');
+            return preg_replace('/\/+$/', '', $_SERVER["PATH_INFO"]);
         }
-        return '';
+        return null;
     }
 
     public static function query()
@@ -54,10 +60,10 @@ class Request
     {
         // TODO: staticalize pathParts
         
-        $pathParts = array_filter(explode('/', self::path()), function($value) {
-            return !empty($value);
+        $path = trim(self::path(), '/');
+        $pathParts = array_filter(explode('/', $path), function ($value) {
+            return ! empty($value);
         });
         return $pathParts;
-        
     }
 }

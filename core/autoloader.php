@@ -1,8 +1,9 @@
 <?php
+defined('IS_APP') || die();
 
 /**
  * The autoloader function is called every time a class is instantiated
- * but have not been included in the code. Controllers are inclulded by
+ * but have not been included in the code. Controllers are included by
  * application/routes.php or core/autorouter.php
  */
 spl_autoload_register(function ($class_name) {
@@ -19,5 +20,4 @@ spl_autoload_register(function ($class_name) {
             break;
         }
     }
-    
 });

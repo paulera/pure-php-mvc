@@ -1,21 +1,25 @@
-<?php 
+<?php
+defined('IS_APP') || die();
 
 class BlogModel
 {
-    
+
     private static $__instance = null;
-    
-    public static function instance() {
-        if (!isset(self::$__instance)) {
+
+    public static function instance()
+    {
+        if (! isset(self::$__instance)) {
             self::$__instance = new BlogModel();
         }
         return self::$__instance;
     }
-    
-    private function __construct() {}
-    
+
+    // Keep from creating new instances of this class
+    private function __construct()
+    {}
+
     protected $blogPostsDirRelativeToRoot = "blog";
-    
+
     protected static $supportedPostExtension = array(
         "md.php",
         "md",
@@ -23,13 +27,13 @@ class BlogModel
         "php",
         "txt"
     );
-    
+
     public function getPostsByPath($path)
     {
         $posts = array();
         
         $folder = DIR_ROOT . DS . $this->blogPostsDirRelativeToRoot . DS . $path;
-        if (!file_exists($folder)) {
+        if (! file_exists($folder)) {
             return $posts;
         }
         
@@ -59,10 +63,10 @@ class BlogModel
         $posts = array_reverse($posts);
         return $posts;
     }
-    
+
     public static function getPostFile($pathNoExtension)
     {
-        $files = glob($pathNoExtension. '.{' . implode(',', self::$supportedPostExtension) . '}', GLOB_BRACE);
+        $files = glob($pathNoExtension . '.{' . implode(',', self::$supportedPostExtension) . '}', GLOB_BRACE);
         if (count($files) > 0) {
             // found!
             return $files[0];

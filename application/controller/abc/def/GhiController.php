@@ -1,6 +1,7 @@
 <?php
+defined('IS_APP') || die();
 
-class GhiController extends Controller
+class GhiController
 {
 
     public function index()

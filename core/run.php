@@ -1,4 +1,5 @@
 <?php
+defined('IS_APP') || die();
 
 include_once DIR_CORE . DS . "Utils.php";
 include_once DIR_CORE . DS . "autoloader.php";
@@ -31,7 +32,7 @@ if (file_exists($file)) {
     // mime_content_type_2 does hardcoded conversion before try apache's
     $mimeType = Utils::mime_content_type_2($file);
     
-    header("Content-Type: ".$mimeType);
+    header("Content-Type: " . $mimeType);
     readfile($file);
     die();
 }

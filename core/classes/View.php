@@ -1,17 +1,19 @@
 <?php
+defined('IS_APP') || die();
 
-class View {
-    
-    public static function render($view, $variables = null) {
-        
+class View
+{
+
+    public static function render($view, $variables = null)
+    {
         $viewRelativePathClean = str_replace("../", "", $view);
-        $filePath = DIR_VIEW.DS.$viewRelativePathClean;
-        if (!file_exists($filePath)) {
-            $filePath = DIR_APP.DS.$viewRelativePathClean;
-            if (!file_exists($filePath)) {
-                $filePath = DIR_ROOT.DS.$viewRelativePathClean;
-                if (!file_exists($filePath)) {
-                    throw new Exception("View not found: ".$viewRelativePathClean);
+        $filePath = DIR_VIEW . DS . $viewRelativePathClean;
+        if (! file_exists($filePath)) {
+            $filePath = DIR_APP . DS . $viewRelativePathClean;
+            if (! file_exists($filePath)) {
+                $filePath = DIR_ROOT . DS . $viewRelativePathClean;
+                if (! file_exists($filePath)) {
+                    throw new Exception("View not found: " . $viewRelativePathClean);
                 }
             }
         }
@@ -25,27 +27,28 @@ class View {
         ob_end_clean();
         return $contents;
     }
-    
-    public static function renderWithLayout($layoutRelativePath, $viewRelativePath, $variables = null) {
+
+    public static function renderWithLayout($layoutRelativePath, $viewRelativePath, $variables = null)
+    {
         $view = self::render($viewRelativePath, $variables);
-        $layoutVariables = array_merge ($variables, array(
+        $layoutVariables = array_merge($variables, array(
             "contents" => $view
         ));
         $page = self::render($layoutRelativePath, $layoutVariables);
         return $page;
     }
-    
-    public static function error($code, $variables = null) {
-        
+
+    public static function error($code, $variables = null)
+    {
         $code = intval($code);
         http_response_code($code);
         
-        $view = "error_".$code.".php";
+        $view = "error_" . $code . ".php";
         
-        if (isset($variables) && is_array($variables) && !isset($variables['code'])) {
+        if (isset($variables) && is_array($variables) && ! isset($variables['code'])) {
             $variables['code'] = $code;
         }
-
+        
         if (View::exists($view)) {
             echo View::render($view, $variables);
             die();
@@ -59,8 +62,9 @@ class View {
         }
         die();
     }
-    
-    public static function exists($view) {
+
+    public static function exists($view)
+    {
         return (file_exists(DIR_VIEW . DS . $view));
     }
 }

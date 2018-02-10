@@ -1,7 +1,9 @@
 <?php
+defined('IS_APP') || die();
 
 class HomeController
 {
+
     public function indexAction()
     {
         $html = View::renderWithLayout("layouts/master.php", "testview.php", array(
