@@ -26,7 +26,7 @@ class BlogController
 
     public function handle()
     {
-        $parts = Input::explodePath();
+        $parts = Request::pathParts();
         $count = count($parts);
         
         $year = null;

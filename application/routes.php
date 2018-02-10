@@ -10,7 +10,7 @@
  * how these files are called).
  */
 
-$parts = Input::explodePath();
+$parts = Request::pathParts();
 
 // If the route is /blog/...., take over the autorouter
 if (isset($parts[0]) && $parts[0] == "blog") {

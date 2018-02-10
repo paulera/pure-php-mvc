@@ -64,7 +64,7 @@
  *   
  */
 
-$parts = Input::explodePath();
+$parts = Request::pathParts();
 
 $partsCount = count($parts);
 foreach ([$partsCount - 2, $partsCount - 1] as $i) {
@@ -114,4 +114,5 @@ foreach ([$partsCount - 2, $partsCount - 1] as $i) {
 
 if (isset($controller)) {
     $controller->$methodName();
+    $controller = null;
 }
