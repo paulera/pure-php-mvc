@@ -18,7 +18,7 @@ class BlogModel
     private function __construct()
     {}
 
-    protected $blogPostsDirRelativeToRoot = "blog";
+    protected $blogDir = "blog";
 
     protected static $supportedPostExtension = array(
         "md.php",
@@ -32,12 +32,12 @@ class BlogModel
     {
         $posts = array();
         
-        $folder = DIR_ROOT . DS . $this->blogPostsDirRelativeToRoot . DS . $path;
+        $folder = DIR_APP . DS . $this->blogDir . DS . $path;
         if (! file_exists($folder)) {
             return $posts;
         }
         
-        $dirIterator = new RecursiveDirectoryIterator(DIR_ROOT . DS . $this->blogPostsDirRelativeToRoot . DS . $path);
+        $dirIterator = new RecursiveDirectoryIterator(DIR_APP . DS . $this->blogDir . DS . $path);
         $objects = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($objects as $name => $object) {
             if ($object->isFile()) {
@@ -48,7 +48,7 @@ class BlogModel
                     continue;
                 }
                 
-                $permalink = '/blog/' . str_replace(DIR_ROOT . DS . $this->blogPostsDirRelativeToRoot . DS, "", $object->getPath()) . DS . $fileName;
+                $permalink = 'blog/' . str_replace(DIR_APP . DS . $this->blogDir . DS, "", $object->getPath()) . DS . $fileName;
                 
                 if (isset($posts[$permalink])) {
                     continue;
@@ -69,7 +69,9 @@ class BlogModel
         $files = glob($pathNoExtension . '.{' . implode(',', self::$supportedPostExtension) . '}', GLOB_BRACE);
         if (count($files) > 0) {
             // found!
-            return $files[0];
+            $filename = $files[0];
+            $fileRelativePath = str_replace(DIR_APP . DS, '', $filename);
+            return $fileRelativePath;
         }
     }
 }

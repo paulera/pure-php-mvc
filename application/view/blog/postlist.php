@@ -23,7 +23,7 @@ defined('IS_APP') || die();
         			</a>
 		</div>
 		<div class="post-title">
-			<a href="<?php echo Env::base() . $permalink; ?>"><?php echo $post->title; ?></a>
+			<a href="<?php echo Env::base() . '/' . $permalink; ?>"><?php echo $post->title; ?></a>
 		</div>
 
 	</li>

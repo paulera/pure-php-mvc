@@ -15,7 +15,8 @@ if (isset($postData->author)) {
     echo '<p class="author">by ' . $postData->author . '</p>' . "\n";
 }
 
-?>
+?><hr>
+This is the title
 <hr>
 <?php echo $contents; ?>
 <hr>

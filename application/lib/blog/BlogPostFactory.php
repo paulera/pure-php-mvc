@@ -12,9 +12,9 @@ class BlogPostFactory
         $post->permalink = DIR_ROOT . $path;
         
         $explodedPath = explode("/", $path);
-        $post->year = $explodedPath[2];
-        $post->month = $explodedPath[3];
-        $post->day = $explodedPath[4];
+        $post->year = $explodedPath[1];
+        $post->month = $explodedPath[2];
+        $post->day = $explodedPath[3];
         
         if (! ctype_digit($post->year) || ! ctype_digit($post->month) || ! ctype_digit($post->day)) {
             throw new Exception("What the flock is this post?");
@@ -24,13 +24,13 @@ class BlogPostFactory
         $post->date->setDate($post->year, $post->month, $post->day);
         $post->date->setTime(0, 0, 0);
         
-        if (file_exists(DIR_ROOT . $path . '.json')) {
-            $metadata = json_decode(file_get_contents(DIR_ROOT . $path . '.json'));
+        if (file_exists(DIR_APP . '/' . $path . '.json')) {
+            $metadata = json_decode(file_get_contents(DIR_APP . '/' . $path . '.json'));
             $post->loadMetadata($metadata);
         }
         
         if (! isset($post->title)) {
-            $title = preg_replace("/(-|_|\ )/", " ", $explodedPath[5]);
+            $title = preg_replace("/(-|_|\ )/", " ", $explodedPath[4]);
             $title = trim(ucfirst($title));
             $post->title = $title;
         }

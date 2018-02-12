@@ -59,6 +59,7 @@ $DIR_PUBLIC = realpath($DIR_ROOT . DS . 'public');
 $DIR_APP = realpath($DIR_ROOT . DS . 'application');
 $DIR_MODEL = realpath($DIR_APP . DS . 'model');
 $DIR_VIEW = realpath($DIR_APP . DS . 'view');
+$DIR_PAGES = realpath($DIR_APP . DS . 'pages');
 $DIR_CONTROLLER = realpath($DIR_APP . DS . 'controller');
 $DIR_LIB = realpath($DIR_APP . DS . 'lib');
 
@@ -73,6 +74,8 @@ if (! $DIR_MODEL)
     throw new Exception("Can't find the MODEL folder.");
 if (! $DIR_VIEW)
     throw new Exception("Can't find the VIEW folder.");
+if (! $DIR_PAGES)
+    throw new Exception("Can't find the PAGES folder.");
 if (! $DIR_CONTROLLER)
     throw new Exception("Can't find the CONTROLLER folder.");
 if (! $DIR_LIB)
@@ -105,6 +108,7 @@ define('DIR_APP', $DIR_APP);
 define('DIR_MODEL', $DIR_MODEL);
 define('DIR_CONTROLLER', $DIR_CONTROLLER);
 define('DIR_VIEW', $DIR_VIEW);
+define('DIR_PAGES', $DIR_PAGES);
 define('DIR_LIB', $DIR_LIB);
 define('DIR_VAR', $DIR_LIB);
 define('DIR_LOG', $DIR_LIB);

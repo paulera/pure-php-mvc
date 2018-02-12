@@ -4,25 +4,64 @@ defined('IS_APP') || die();
 class View
 {
 
-    public static function render($view, $variables = null)
+    public static function render($view, $variables = null, $extension = null)
     {
         $viewRelativePathClean = str_replace("../", "", $view);
         $filePath = DIR_VIEW . DS . $viewRelativePathClean;
         if (! file_exists($filePath)) {
-            $filePath = DIR_APP . DS . $viewRelativePathClean;
+            $filePath = DIR_PAGES . DS . $viewRelativePathClean;
             if (! file_exists($filePath)) {
-                $filePath = DIR_ROOT . DS . $viewRelativePathClean;
+                $filePath = DIR_APP . DS . $viewRelativePathClean;
                 if (! file_exists($filePath)) {
                     throw new Exception("View not found: " . $viewRelativePathClean);
                 }
             }
         }
-        
         ob_start();
         if (isset($variables) and is_array($variables)) {
             extract($variables);
         }
-        include $filePath;
+        
+        if (!isset($extension)) {
+            $filename = basename($filePath);
+            $dot = strpos($filename,'.');
+            $extension = substr($filename, $dot);
+        }
+        
+        $extension = trim($extension, '.');
+        
+        switch ($extension) {
+            case 'php':
+                include($filePath);
+                break;
+                
+            case 'md':
+                $mdContents = file_get_contents($filePath);
+                $parsedown = new Parsedown();
+                $htmlContents = $parsedown->text($mdContents);
+                echo $htmlContents;
+                break;
+                
+            case 'md.php':
+                $mdContents = self::render($viewRelativePathClean, $variables, 'php');
+                $parsedown = new Parsedown();
+                $htmlContents = $parsedown->text($mdContents);
+                echo $htmlContents;
+                break;
+                
+            case 'html':
+            case 'htm':
+                $htmlContents = file_get_contents($postFile);
+                echo $htmlContents;
+                break;
+                
+            case 'txt':
+                $htmlContents = file_get_contents($postFile);
+                $htmlContents = htmlentities($htmlContents);
+                echo $htmlContents;
+                break;
+        }
+        
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;

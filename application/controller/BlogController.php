@@ -78,7 +78,7 @@ class BlogController
         $postDayPath = $this->blogPostsDirRelativeToRoot . $year . DS . $month . DS . $day . DS;
         $postRelativePathNoExt = $postDayPath . $post;
         
-        $postFullPathNoExt = realpath(DIR_ROOT . DS . 'blog' . DS . $postDayPath) . DS . $post;
+        $postFullPathNoExt = realpath(DIR_APP . DS . 'blog' . DS . $postDayPath) . DS . $post;
         
         // Try to load post metadata from JSON file
         $postMetaData = null;
@@ -113,37 +113,7 @@ class BlogController
             die();
         }
         
-        $postType = trim(str_replace($postFullPathNoExt, '', $postFile), '.');
-        
-        // Handling the file that was found.
-        $htmlContents = "";
-        switch ($postType) {
-            case 'php':
-                $htmlContents = View::render($postRelativePathNoExt . ".php");
-                break;
-            
-            case 'md':
-                $mdContents = file_get_contents($postFile);
-                $parsedown = new Parsedown();
-                $htmlContents = $parsedown->text($mdContents);
-                break;
-            
-            case 'md.php':
-                $mdContents = View::render('blog' . DS . $postRelativePathNoExt . ".md.php");
-                $parsedown = new Parsedown();
-                $htmlContents = $parsedown->text($mdContents);
-                break;
-            
-            case 'html':
-            case 'htm':
-                $htmlContents = file_get_contents($postFile);
-                break;
-            
-            case 'txt':
-                $htmlContents = file_get_contents($postFile);
-                $htmlContents = htmlentities($htmlContents);
-                break;
-        }
+        $htmlContents = View::render($postFile);
         
         $date = new DateTime();
         $date->setDate($year, $month, $day);
@@ -160,7 +130,7 @@ class BlogController
             $postMetaData->uuid = $postRelativePathNoExt;
         }
         
-        $postMetaData->permalink = "/" . $postRelativePathNoExt;
+        $postMetaData->permalink = 'blog/' . $postRelativePathNoExt;
         
         $contentsWithBlogSubLayout = View::render("blog/post.php", array(
             "contents" => $htmlContents,
