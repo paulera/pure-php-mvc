@@ -25,8 +25,8 @@ require_once DIR_CORE . DS . "autorouter.php";
 // see: http://www.htaccess-guide.com/adding-mime-types/
 
 $pathInfo = $_SERVER['PATH_INFO'];
-$pathInfo = str_replace("..", "", $pathInfo);
-$file = DIR_PUBLIC . $pathInfo;
+$pathInfo = Utils::sanitize($pathInfo, 'path');
+$file = DIR_PUBLIC . DS . $pathInfo;
 if (file_exists($file)) {
     
     // mime_content_type_2 does hardcoded conversion before try apache's

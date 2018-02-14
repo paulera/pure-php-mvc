@@ -6,7 +6,7 @@ class View
 
     public static function render($view, $variables = null, $extension = null)
     {
-        $viewRelativePathClean = str_replace("../", "", $view);
+        $viewRelativePathClean = Utils::sanitize($view, 'view');
         $filePath = DIR_VIEW . DS . $viewRelativePathClean;
         if (! file_exists($filePath)) {
             $filePath = DIR_PAGES . DS . $viewRelativePathClean;
@@ -22,9 +22,9 @@ class View
             extract($variables);
         }
         
-        if (!isset($extension)) {
+        if (! isset($extension)) {
             $filename = basename($filePath);
-            $dot = strpos($filename,'.');
+            $dot = strpos($filename, '.');
             $extension = substr($filename, $dot);
         }
         
@@ -32,29 +32,29 @@ class View
         
         switch ($extension) {
             case 'php':
-                include($filePath);
+                include ($filePath);
                 break;
-                
+            
             case 'md':
                 $mdContents = file_get_contents($filePath);
                 $parsedown = new Parsedown();
                 $htmlContents = $parsedown->text($mdContents);
                 echo $htmlContents;
                 break;
-                
+            
             case 'md.php':
                 $mdContents = self::render($viewRelativePathClean, $variables, 'php');
                 $parsedown = new Parsedown();
                 $htmlContents = $parsedown->text($mdContents);
                 echo $htmlContents;
                 break;
-                
+            
             case 'html':
             case 'htm':
                 $htmlContents = file_get_contents($postFile);
                 echo $htmlContents;
                 break;
-                
+            
             case 'txt':
                 $htmlContents = file_get_contents($postFile);
                 $htmlContents = htmlentities($htmlContents);

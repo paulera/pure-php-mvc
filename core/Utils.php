@@ -7,10 +7,49 @@ class Utils
     // Keep from creating new instances of this class
     private function __construct()
     {}
-    
+
     public static function log($message)
     {
         error_log($message);
+    }
+
+    public static function sanitize($data, $type = 'alphanum')
+    {
+        $result = $data;
+        switch ($type) {
+            case 'alphanum':
+                $result = preg_replace('/^[0-9a-z-_]/i', '', $result);
+                break;
+            case 'view':
+            case 'path':
+                /**
+                 *
+                 * @see https://www.owasp.org/index.php/Path_Traversal
+                 */
+                $resultBefore = "";
+                for ($i = 0; $i < 3; $i ++) {
+                    if ($i) { // dont decode first time
+                        $result = urldecode($result);
+                    }
+                    $result = str_replace(array(
+                        '%00', // null char representation
+                        "\x00",
+                        '../',
+                        '..\\'
+                    ), '', $result);
+                    if ($result == $resultBefore) {
+                        break;
+                    }
+                    $resultBefore = $result;
+                }
+                
+                $result = preg_replace('/[^0-9a-z-_\\.\\/\\\\ ]/i', '', $result);
+                
+                // removes leading/trailing whitechars and slashes
+                $result = trim($result, " \t\r\n\\/");
+                break;
+        }
+        return $result;
     }
 
     public static function mime_content_type_2($file)
