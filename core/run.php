@@ -20,16 +20,13 @@ if (file_exists(DIR_APP . DS . "routes.php")) {
 require_once DIR_CORE . DS . "autorouter.php";
 
 // ----------------------------------------------------------------------
-// Route still not found. Maybe looking for a file relative to the root?
-// it is important to have on .htaccess the mime types definition set
-// see: http://www.htaccess-guide.com/adding-mime-types/
+// Route still not found. Maybe looking for a file relative to the app folder?
 
 $pathInfo = $_SERVER['PATH_INFO'];
 $pathInfo = Utils::sanitize($pathInfo, 'path');
 $file = DIR_PUBLIC . DS . $pathInfo;
 if (file_exists($file)) {
     
-    // mime_content_type_2 does hardcoded conversion before try apache's
     $mimeType = Utils::mime_content_type_2($file);
     
     header("Content-Type: " . $mimeType);
