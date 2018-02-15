@@ -8,3 +8,4 @@ defined('IS_APP') || die();
  * files automatically).
  */
 include DIR_CONTROLLER . DS . "BlogController.php";
+include DIR_CONTROLLER . DS . "PageController.php";

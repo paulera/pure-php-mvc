@@ -66,11 +66,11 @@ class BlogController
             $contents = $this->listPostsByDate($year, $month, $day);
         }
         
-        $contents = View::render("layouts/master.php", array(
+        echo View::render("layouts/master.php", array(
             "contents" => $contents
         ));
         
-        die($contents);
+        return true;
     }
 
     private function showPost($year, $month, $day, $post)

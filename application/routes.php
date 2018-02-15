@@ -3,20 +3,25 @@ defined('IS_APP') || die();
 
 /**
  * This is the user custom routes file.
- * Router::getPathParts() will give access to the path structure, to be
- * analysed.
- * If you decide to use any particular controller for a particular route,
- * make sure to return with a die() statement to avoid the request from
- * being processed by autorouter.php too (refer to start.php to understand
- * how these files are called).
+ * 
+ * Here you can parse routes using Request::path() or Request::pathParts() and
+ * perform some action (e.g. View::render(), include, call a controller
+ * function, etc). MAKE SURE to call die().
+ *
+ * If the execution doesn't die in this file, the request will be handled by
+ * the autorouter (refer to run.php to see how these files are called).
+ *  
  */
-$parts = Request::pathParts();
 
-// If the route is /blog/...., take over the autorouter
-if (isset($parts[0]) && $parts[0] == "blog") {
-    // this request has to be handled by the BlogController, lets it's
-    // "route" function to do the work
+// For route '/blog'
+if (strtolower(substr(Request::path(), 0, 5 )) === "/blog") {
     $blogController = new BlogController();
-    $blogController->handle();
+    if ($blogController->handle()) {
+        die();
+    }
+}
+
+$pageController = new PageController();
+if ($pageController->handle()) {
     die();
 }
