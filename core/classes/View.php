@@ -51,12 +51,12 @@ class View
             
             case 'html':
             case 'htm':
-                $htmlContents = file_get_contents($postFile);
+                $htmlContents = file_get_contents($filePath);
                 echo $htmlContents;
                 break;
             
             case 'txt':
-                $htmlContents = file_get_contents($postFile);
+                $htmlContents = file_get_contents($filePath);
                 $htmlContents = htmlentities($htmlContents);
                 echo $htmlContents;
                 break;
