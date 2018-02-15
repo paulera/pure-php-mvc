@@ -52,6 +52,14 @@ class Utils
         return $result;
     }
 
+    /**
+     * Return a mime-type based on file extension. Try hardcoded values, if
+     * not found, use native mime_content_type (which relies on webserver
+     * configuration).
+     * http://www.htaccess-guide.com/adding-mime-types/
+     * @param string $filename File name to analyze.
+     * @return string 
+     */
     public static function mime_content_type_2($file)
     {
         $extension = strtolower(end(explode(".", $file)));
