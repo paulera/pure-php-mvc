@@ -8,7 +8,7 @@ if [ ! -d "public" ]; then
     exit 1
 fi
 
-cd public/..
+cd public
 
 HOST="127.0.0.1"
 PORT="9091"
