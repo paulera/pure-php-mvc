@@ -16,7 +16,7 @@ class BlogPostFactory
         $post->month = $explodedPath[2];
         $post->day = $explodedPath[3];
         
-        if (! ctype_digit($post->year) || ! ctype_digit($post->month) || ! ctype_digit($post->day)) {
+        if (! is_numeric($post->year) || ! is_numeric($post->month) || ! is_numeric($post->day)) {
             throw new Exception("What the flock is this post?");
         }
         
