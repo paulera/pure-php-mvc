@@ -3,68 +3,79 @@ defined('IS_APP') || die();
 
 class View
 {
+    
+    private static $supportedExtensions = array(
+        ".md.php",
+        ".md",
+        ".html",
+        ".php",
+        ".txt"
+    );
+    
+    public static function getSupportedExtensions() {
+        return self::$supportedExtensions;
+    }
 
     public static function render($view, $variables = null, $extension = null)
     {
-        $viewRelativePathClean = Utils::sanitize($view, 'view');
-        $filePath = DIR_VIEW . DS . $viewRelativePathClean;
-        if (! file_exists($filePath)) {
-            $filePath = DIR_PAGES . DS . $viewRelativePathClean;
-            if (! file_exists($filePath)) {
-                $filePath = DIR_APP . DS . $viewRelativePathClean;
-                if (! file_exists($filePath)) {
-                    throw new Exception("View not found: " . $viewRelativePathClean);
-                }
+        $cleanPath = Utils::sanitize($view, 'view');
+        if (file_exists($cleanPath)) {
+            $filePath = $cleanPath;
+        } else {
+            $filePath = self::find($cleanPath);
+        }
+        
+        if ($filePath && file_exists($filePath)) {
+            ob_start();
+            if (isset($variables) and is_array($variables)) {
+                extract($variables);
             }
-        }
-        ob_start();
-        if (isset($variables) and is_array($variables)) {
-            extract($variables);
-        }
-        
-        if (! isset($extension)) {
-            $filename = basename($filePath);
-            $dot = strpos($filename, '.');
-            $extension = substr($filename, $dot);
-        }
-        
-        $extension = trim($extension, '.');
-        
-        switch ($extension) {
-            case 'php':
-                include ($filePath);
-                break;
             
-            case 'md':
-                $mdContents = file_get_contents($filePath);
-                $parsedown = new Parsedown();
-                $htmlContents = $parsedown->text($mdContents);
-                echo $htmlContents;
-                break;
+            if (! isset($extension)) {
+                $filename = basename($filePath);
+                $dot = strpos($filename, '.');
+                $extension = substr($filename, $dot);
+            }
             
-            case 'md.php':
-                $mdContents = self::render($viewRelativePathClean, $variables, 'php');
-                $parsedown = new Parsedown();
-                $htmlContents = $parsedown->text($mdContents);
-                echo $htmlContents;
-                break;
+            $extension = strtolower(trim($extension, '.'));
             
-            case 'html':
-            case 'htm':
-                $htmlContents = file_get_contents($filePath);
-                echo $htmlContents;
-                break;
+            switch ($extension) {
+                case 'php':
+                    include ($filePath);
+                    break;
+                
+                case 'md':
+                    $mdContents = file_get_contents($filePath);
+                    $parsedown = new Parsedown();
+                    $htmlContents = $parsedown->text($mdContents);
+                    echo $htmlContents;
+                    break;
+                
+                case 'md.php':
+                    $mdContents = self::render($view, $variables, 'php');
+                    $parsedown = new Parsedown();
+                    $htmlContents = $parsedown->text($mdContents);
+                    echo $htmlContents;
+                    break;
+                
+                case 'html':
+                case 'htm':
+                    $htmlContents = file_get_contents($filePath);
+                    echo $htmlContents;
+                    break;
+                
+                case 'txt':
+                    $htmlContents = file_get_contents($filePath);
+                    $htmlContents = htmlentities($htmlContents);
+                    echo $htmlContents;
+                    break;
+            }
             
-            case 'txt':
-                $htmlContents = file_get_contents($filePath);
-                $htmlContents = htmlentities($htmlContents);
-                echo $htmlContents;
-                break;
+            $contents = ob_get_contents();
+            ob_end_clean();
+            return $contents;
         }
-        
-        $contents = ob_get_contents();
-        ob_end_clean();
-        return $contents;
+        return false;
     }
 
     public static function renderWithLayout($layoutRelativePath, $viewRelativePath, $variables = null)
@@ -88,7 +99,8 @@ class View
             $variables['code'] = $code;
         }
         
-        if (View::exists($view)) {
+        if (View::find
+            ($view)) {
             echo View::render($view, $variables);
             die();
         }
@@ -101,9 +113,45 @@ class View
         }
         die();
     }
-
-    public static function exists($view)
-    {
-        return (file_exists(DIR_VIEW . DS . $view));
+    
+    public static function findAll($path)
+    {   
+        $filename = basename($path);
+        if (strpos($filename, '.') > 0) {
+            if (file_exists(DIR_VIEW . DS . $path)) {
+                return array(DIR_VIEW . DS . $path);
+            }
+            
+            if (file_exists(DIR_PAGES . DS . $path)) {
+                return array(DIR_PAGES . DS . $path);
+            }
+            
+            if (file_exists(DIR_APP . DS . $path)) {
+                return array(DIR_APP . DS . $path);
+            }
+        }
+        
+        $brace = '{' . implode(',', self::$supportedExtensions) . '}';
+        $files = glob(DIR_VIEW . DS . $path . $brace, GLOB_BRACE);
+        if (! count($files)) {
+            $files = glob(DIR_PAGES . DS . $path. $brace, GLOB_BRACE);
+            if (! count($files)) {
+                $files = glob(DIR_APP . DS . $path. $brace, GLOB_BRACE);
+                if (! count($files)) {
+                    return false;
+                }
+            }
+        }
+        return $files;
     }
+    
+    public static function find($path)
+    {
+        $files = self::findAll($path);
+        if (!$files) {
+            return false;
+        }
+        return $files[0];
+    }
+    
 }

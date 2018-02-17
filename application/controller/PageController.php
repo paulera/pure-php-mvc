@@ -2,14 +2,6 @@
 
 class PageController {
     
-    protected static $supportedExtension = array(
-        "md.php",
-        "md",
-        "html",
-        "php",
-        "txt"
-    );
-    
     public function handle() {
         
         $path = Utils::sanitize(Request::path(), 'path');
@@ -17,22 +9,19 @@ class PageController {
             return false;
         }
         
-        $searchFilename = glob(DIR_PAGES . DS . $path . '.{' . implode(',', self::$supportedExtension) . '}', GLOB_BRACE);
-        $searchIndex = glob(DIR_PAGES . DS . $path . '/index.{' . implode(',', self::$supportedExtension) . '}', GLOB_BRACE);
+        $file = View::find($path);
         
-        if (count($searchFilename) == 0 && count($searchIndex) == 0) {
+        if (!$file) {
+            $file = View::find($path . '/index');
+        }
+        
+        if (!$file) {
             return false;
         }
         
-        if (isset($searchIndex[0])) {
-            $fileAsView = str_replace(DIR_PAGES . DS, '', $searchIndex[0]);
-            echo View::render($fileAsView);
-            return true;
-        } else {
-            $fileAsView = str_replace(DIR_PAGES . DS, '', $searchFilename[0]);
-            echo View::render($fileAsView);
-            return true;
-        }
+        echo View::render($file);
+        
+        return true;
         
     }
     
