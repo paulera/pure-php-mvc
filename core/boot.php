@@ -113,13 +113,6 @@ define('DIR_LIB', $DIR_LIB);
 define('DIR_VAR', $DIR_LIB);
 define('DIR_LOG', $DIR_LIB);
 
-$scriptName = $_SERVER['SCRIPT_NAME'];
-if (substr($scriptName, - 1) != '/') {
-    $scriptName = $scriptName . '/';
-}
-define('SITE', $scriptName);
-
-define('SITE_ROOT_URL', str_replace('/index.php/', '', $scriptName));
 
 // Calls the WAF (Web Application Firewall) which will have a look at the RAW
 // request and drop in case it find anything malicious.

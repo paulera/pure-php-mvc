@@ -91,10 +91,6 @@ class BlogController
         $postFile = null;
         if (isset($postMetaData) && isset($postMetadata->file)) {
             if (file_exists($postMetadata->file)) {
-                // $fileExtension = strtolower(end(explode(".", $postMetadata->file)));
-                // if (! in_array($this->supportedPostExtension, $fileExtension)) {
-                // throw new Exception("Post format not supported");
-                // }
                 $postFile = $postMetadata->file;
             } else {
                 throw new Exception("File not found");
