@@ -3,7 +3,16 @@ defined('IS_APP') || die();
 
 class Request
 {
+
+    private static $_isHttps = null;
     
+    private static $_path = null;
+
+    private static $_pageUrlForSeo = null;
+
+    private static $_pathParts = null;
+    
+
     // Keep from creating new instances of this class
     private function __construct()
     {}
@@ -15,7 +24,10 @@ class Request
 
     public static function isHttps()
     {
-        return isset($_SERVER['HTTPS']) && ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off";
+        if (! isset(self::$_isHttps)) {
+            self::$_isHttps = isset($_SERVER['HTTPS']) && ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != "off";
+        }
+        return self::$_isHttps;
     }
 
     public static function protocol()
@@ -38,11 +50,10 @@ class Request
 
     public static function path()
     {
-        // TODO: staticalize path
-        if (isset($_SERVER["PATH_INFO"])) {
-            return preg_replace('/\/+$/', '', $_SERVER["PATH_INFO"]);
+        if (! isset(self::$_path)) {
+            self::$_path = '/' . trim($_SERVER["PATH_INFO"], '/');
         }
-        return null;
+        return self::$_path;
     }
 
     public static function query()
@@ -52,18 +63,20 @@ class Request
 
     public static function pageUrlForSeo()
     {
-        // TODO: staticalize pageUrlForSeo
-        return self::protocol() . '://' . self::host() . str_ireplace('/index.php', '', self::script()) . self::path();
+        if (! isset(self::$_pageUrlForSeo)) {
+            self::$_pageUrlForSeo = self::protocol() . '://' . self::host() . str_ireplace('/index.php', '', self::script()) . self::path();
+        }
+        return self::$_pageUrlForSeo;
     }
 
     public static function pathParts()
     {
-        // TODO: staticalize pathParts
-        
-        $path = trim(self::path(), '/');
-        $pathParts = array_filter(explode('/', $path), function ($value) {
-            return ! empty($value);
-        });
-        return $pathParts;
+        if (! isset(self::$_pathParts)) {
+            $path = trim(self::path(), '/');
+            self::$_pathParts = array_filter(explode('/', $path), function ($value) {
+                return ! empty($value);
+            });
+        }
+        return self::$_pathParts;
     }
 }
