@@ -37,7 +37,7 @@ class Utils
                         '../',
                         '..\\'
                     ), '', $result);
-                    if ($result == $resultBefore) {
+                    if ($i && $result == $resultBefore) {
                         break;
                     }
                     $resultBefore = $result;
@@ -45,8 +45,8 @@ class Utils
                 
                 $result = preg_replace('/[^0-9a-z-_\\.\\/\\\\ ]/i', '', $result);
                 
-                // removes leading/trailing whitechars and slashes
-                $result = trim($result, " \t\r\n\\/");
+                // removes leading whitechars
+                $result = trim($result, " \t\r\n");
                 break;
         }
         return $result;
