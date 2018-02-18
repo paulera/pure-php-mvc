@@ -51,7 +51,12 @@ class Request
     public static function path()
     {
         if (! isset(self::$_path)) {
-            self::$_path = '/' . trim($_SERVER["PATH_INFO"], '/');
+            if (isset($_SERVER["PATH_INFO"])) {
+                $pathInfo = $_SERVER["PATH_INFO"];
+            } else {
+                $pathInfo = '';
+            }
+            self::$_path = '/' . trim($pathInfo, '/');
         }
         return self::$_path;
     }
