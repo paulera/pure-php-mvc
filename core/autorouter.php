@@ -121,5 +121,5 @@ foreach ([
 
 if (isset($controller)) {
     $controller->$methodName();
-    $controller = null;
+    die();
 }
