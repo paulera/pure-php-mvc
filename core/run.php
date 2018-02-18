@@ -20,7 +20,7 @@ if (file_exists(DIR_APP . DS . "routes.php")) {
 require_once DIR_CORE . DS . "autorouter.php";
 
 // ----------------------------------------------------------------------
-// Route still not found. Maybe looking for a file relative to the app folder?
+// Route still not found. Maybe looking for a file relative to the public folder?
 
 $pathInfo = $_SERVER['PATH_INFO'];
 $pathInfo = Utils::sanitize($pathInfo, 'path');
