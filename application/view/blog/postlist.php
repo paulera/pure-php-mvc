@@ -6,7 +6,7 @@ defined('IS_APP') || die();
 
 <ul class="posts-list">
     
-    <?
+    <?php
     
     foreach ($posts as $permalink => $post) {
         
