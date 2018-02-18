@@ -62,7 +62,8 @@ class Utils
      */
     public static function mime_content_type_2($file)
     {
-        $extension = strtolower(end(explode(".", $file)));
+        $fileParts = explode(".", $file);
+        $extension = strtolower(end($fileParts));
         switch ($extension) {
             case 'ecma':
                 return 'application/ecmascript';
