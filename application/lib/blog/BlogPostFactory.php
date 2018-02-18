@@ -25,8 +25,8 @@ class BlogPostFactory
         $post->date->setTime(0, 0, 0);
         
         if (file_exists(DIR_APP . '/' . $path . '.json')) {
-            $metadata = json_decode(file_get_contents(DIR_APP . '/' . $path . '.json'));
-            $post->loadMetadata($metadata);
+            $data = json_decode(file_get_contents(DIR_APP . '/' . $path . '.json'));
+            $post->loadData($data);
         }
         
         if (! isset($post->title)) {

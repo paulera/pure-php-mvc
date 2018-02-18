@@ -22,7 +22,7 @@ class BlogController
 
     public function indexAction()
     {
-        $contents = $this->listPostsByDate($year, $month, $day);
+        $contents = $this->listPosts();
         echo View::render("layouts/master.php", array(
             "contents" => $contents
         ));

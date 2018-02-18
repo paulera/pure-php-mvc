@@ -41,10 +41,16 @@ class BlogModel
         $objects = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($objects as $name => $object) {
             if ($object->isFile()) {
+                
+                // With extension
                 $fileBaseName = $object->getBaseName();
-                $fileName = trim(str_replace(self::$supportedPostExtension, "", $object->getBaseName()), '.');
+                
+                // Without extension
+                $fileName = trim(str_replace(View::getSupportedExtensions(), "", $object->getBaseName()), '.');
                 
                 if ($fileName == $fileBaseName) {
+                    // Can't extract a known file extension for views, so it is 
+                    // not a post.
                     continue;
                 }
                 
