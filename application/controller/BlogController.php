@@ -22,13 +22,19 @@ class BlogController
 
     public function indexAction()
     {
-        $this->listPosts();
+        $contents = $this->listPostsByDate($year, $month, $day);
+        echo View::render("layouts/master.php", array(
+            "contents" => $contents
+        ));
     }
 
     public function handle()
     {
         $parts = Request::pathParts();
         $count = count($parts);
+        if ($count == 1 && $parts[0] == 'blog') {
+            return false;
+        }
         
         $year = null;
         $month = null;
@@ -38,24 +44,28 @@ class BlogController
         if ($count > 1) {
             $year = $parts[1];
             if (! ctype_digit($year)) {
+                return false;
                 throw new Exception("Invalid year.");
             }
         }
         if ($count > 2 && ctype_digit($parts[2])) {
             $month = $parts[2];
             if (! ctype_digit($month)) {
+                return false;
                 throw new Exception("Invalid month.");
             }
         }
         if ($count > 3 && ctype_digit($parts[3])) {
             $day = $parts[3];
             if (! ctype_digit($day)) {
+                return false;
                 throw new Exception("Invalid day.");
             }
         }
         if ($count > 4) {
             $post = $parts[4];
             if (! ctype_alnum(str_replace($this->postWhiteListChars, "", $post))) {
+                return false;
                 throw new Exception("Invalid post.");
             }
         }
